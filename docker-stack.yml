@@ -1,0 +1,45 @@
+networks:
+  traefik-public:
+    external: true
+services:
+  backend:
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.frontend.rule: PathPrefix:/api
+        traefik.port: '80'
+        traefik.tags: flask-project.rwandata.com
+    image: backend:prod
+  frontend:
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.frontend.rule: PathPrefix:/
+        traefik.port: '80'
+        traefik.tags: flask-project.rwandata.com
+    image: frontend:prod
+  proxy:
+    command: --docker \ --docker.swarmmode \ --docker.watch \ --docker.exposedbydefault=false
+      \ --constraints=tag==flask-project.rwandata.com \ --logLevel=INFO \ --accessLog
+      \ --web
+    deploy:
+      labels:
+        traefik.docker.network: traefik-public
+        traefik.enable: "true"
+        traefik.frontend.rule: Host:flask-project.rwandata.com
+        traefik.port: '80'
+        traefik.servicehttp.frontend.entryPoints: http
+        traefik.servicehttp.frontend.redirect.entryPoint: https
+        traefik.servicehttps.frontend.entryPoints: https
+        traefik.tags: traefik-public
+      placement:
+        constraints:
+        - node.role == manager
+    image: traefik:v1.7
+    networks:
+      default: null
+      traefik-public: null
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock:rw
+version: '3.3'
+

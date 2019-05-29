@@ -1,0 +1,14 @@
+default_context:
+  project_name: 'Flask Project'
+  project_slug: 'flask-project'
+  domain_main: 'flask-project.rwandata.com'
+  backend_cors_origins: 'http://localhost, http://localhost:4200, http://localhost:3000, http://localhost:8080, http://dev.flask-project.rwandata.com, https://flask-project.rwandata.com, http://local.dockertoolbox.tiangolo.com, http://localhost.tiangolo.com'
+  docker_swarm_stack_name_main: 'flask-project-rwandata-com'
+  traefik_constraint_tag: 'flask-project.rwandata.com'
+  traefik_public_network: 'traefik-public'
+  traefik_public_constraint_tag: 'traefik-public'
+  docker_image_prefix: ''
+  docker_image_backend: 'backend'
+  docker_image_frontend: 'frontend'
+  _copy_without_render: [frontend/src/**/*.html, frontend/src/**/*.vue, frontend/node_modules/*]
+  _template: ./
